@@ -6,77 +6,47 @@ Author: David
 
 2025-07-01
 */
+
+#ifndef DAVIDVM_H
+#define DAVIDVM_H
+
 #define _DEFAULT_SOURCE
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
 #include <assert.h>
- 
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long uint64_t;
 
-#define $1 (uint8_t)
-#define $2 (uint16_t)
-#define $4 (uint32_t)
-#define $8 (uint64_t)
-#define $c (char*)
-#define $i (int)
+#define VM_STACK_CAP 1024
 
-typedef unsigned short int reg;
+typedef int64_t Word;
 
-typedef struct Registers Registers;
-struct Registers {
-    reg ax;
-    reg bx; 
-    reg cx;
-    reg dx;
-    reg sp;
-    reg ip;
-};
+typedef struct {
+    Word stack[VM_STACK_CAP];
+    size_t stack_sz;
+} Vm;
 
-typedef struct CPU CPU;
-struct CPU{
-    Registers r;
-};
- 
-typedef uint8_t Stack;
+typedef enum {
+    INSTR_PUSH,
+    INSTR_POP,
+    INSTR_SUM
+} Instr_Type;
 
-typedef uint8_t Opcode;
+typedef enum {
+    TRAP_OK = 0,
+    TRAP_STACK_OVERFLOW,
+    TRAP_STACK_UNDERFLOW
+} Trap;
 
-typedef Opcode Program;
+typedef struct {
+    Instr_Type type;
+    Word operand;
+} Instr;
 
-enum e_opcode {
-    MOV = 0x01,
-    NOP = 0x02
-}
+Trap execute_instr(Vm *vm, Instr instr);
 
-typedef Instruction Instructon;
-
-struct Instruction {
-    Opcode o;
-    Args a[];
-};
-
-typedef struct Instruction_Map IM;
-struct Instruction_Map {
-    Opcode o;
-    uint8_t size;
-}
-
-
-typedef struct VM VM;
-struct VM {
-    CPU* cpu;
-    Stack stack;
-    Program* program;
-};
-
-static IM* inst_map = {
-    { Opcode.MOV, 0x03}
-};
+#endif
