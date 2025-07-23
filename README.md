@@ -1,6 +1,6 @@
 Resources:
 
-Crafting Interpreters By Robert Nystrom:
+"A Bytecode Virtual Machine" from Crafting Interpreters By Robert Nystrom:
 https://craftinginterpreters.com/a-bytecode-virtual-machine.html
 
 NaN Boxing
