@@ -39,7 +39,8 @@ typedef enum {
 typedef enum {
     TRAP_OK = 0,
     TRAP_STACK_OVERFLOW,
-    TRAP_STACK_UNDERFLOW
+    TRAP_STACK_UNDERFLOW,
+    TRAP_ILLEGAL_INSTR
 } Trap;
 
 typedef struct {
@@ -47,6 +48,12 @@ typedef struct {
     Word operand;
 } Instr;
 
+Instr instr_push(Word operand);
+Instr instr_pop(void);
+Instr instr_sum(void);
+
 Trap execute_instr(Vm *vm, Instr instr);
+
+void dump_vm_stack(const Vm* vm);
 
 #endif
